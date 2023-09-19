@@ -1,0 +1,13 @@
+.idea/
+.png
+.jpeg
+.data
+.pkl
+venv
+venv/*
+data/*
+pre-trainedmodels/*
+dlib/*
+.dat
+dlib
+.DS_Store
