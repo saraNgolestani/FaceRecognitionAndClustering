@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
 
-predictor_path = "./pre-trainedmodels/shape_predictor_68_face_landmarks.dat"  # Replace with the path to your shape predictor model
+predictor_path = "inference/pre-trainedmodels/shape_predictor_68_face_landmarks.dat"  # Replace with the path to your shape predictor model
 
 
 # Step 2: Face Detection

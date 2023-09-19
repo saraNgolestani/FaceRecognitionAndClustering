@@ -6,8 +6,10 @@
 venv
 venv/*
 data/*
-pre-trainedmodels/*
+inference/pre-trainedmodels/*
 dlib/*
 .dat
 dlib
 .DS_Store
+!data/.gitkeep
+!inference/pre-trainedmodels/.gitkeep
