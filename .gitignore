@@ -13,3 +13,5 @@ dlib
 .DS_Store
 !data/.gitkeep
 !inference/pre-trainedmodels/.gitkeep
+.pickle
+output/*
