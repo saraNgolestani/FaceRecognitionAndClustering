@@ -23,3 +23,26 @@ labelIDs = np.unique(cluster.labels_)
 numUniqueFaces = len(np.where(labelIDs > -1)[0])
 print("[INFO] # unique faces: {}".format(numUniqueFaces))
 
+for labelID in labelIDs:
+    print("[INFO] faces for face ID: {}".format(labelID))
+    idxs = np.where(cluster.labels_ == labelID)[0]
+    idxs = np.random.choice(idxs, size=min(15, len(idxs)),
+                            replace=False)
+    faces = []
+
+    for i in idxs:
+        image = cv2.imread(data[i]["imagePath"])
+        (top, right, bottom, left) = data[i]["loc"]
+        face = image[top:bottom, left:right]
+
+        face = cv2.resize(face, (96, 96))
+        faces.append(face)
+
+        # create a montage using 96x96 "tiles" with 5 rows and 5 columns
+        montage = build_montages(faces, (96, 96), (5, 5))[0]
+
+        # show the output montage
+        title = "Face ID #{}".format(labelID)
+        title = "Unknown Faces" if labelID == -1 else title
+        cv2.imshow(title, montage)
+        # cv2.waitKey(0)
