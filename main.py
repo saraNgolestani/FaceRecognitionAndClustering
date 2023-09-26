@@ -31,8 +31,6 @@ def align_face(face_image, face_landmarks):
 
 # Step 4: Feature Extraction
 def extract_features(image, boxes):
-    # Preprocess the face image (e.g., resize, normalize pixel values)
-    processed_face = preprocess_image(face)
 
     # Load your pre-trained deep learning model (e.g., FaceNet, VGGFace, ArcFace)
     # Replace 'load_pretrained_model' with the actual code to load your model.
