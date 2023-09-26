@@ -3,17 +3,18 @@ import dlib
 import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
+import face_recognition
 
-predictor_path = "inference/pre-trainedmodels/shape_predictor_68_face_landmarks.dat"  # Replace with the path to your shape predictor model
+
+predictor_path = "inference/pre-trainedmodels/shape_predictor_68_face_landmarks.dat"
 
 
 # Step 2: Face Detection
 def detect_faces(image_path):
-    detector = dlib.get_frontal_face_detector()
-    img = cv2.imread(image_path)
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    faces = detector(gray)
-    return [(x.left(), x.top(), x.right(), x.bottom()) for x in faces]
+    image = cv2.imread(image_path)
+    boxes = face_recognition.face_locations(image, model='cnn')
+    encodings = face_recognition.face_encodings(image, boxes)
+    return boxes, encodings
 
 
 # Step 3: Face Alignment (You may use a dedicated alignment method)
@@ -29,16 +30,16 @@ def align_face(face_image, face_landmarks):
 
 
 # Step 4: Feature Extraction
-def extract_features(image, face):
+def extract_features(image, boxes):
     # Preprocess the face image (e.g., resize, normalize pixel values)
     processed_face = preprocess_image(face)
 
     # Load your pre-trained deep learning model (e.g., FaceNet, VGGFace, ArcFace)
     # Replace 'load_pretrained_model' with the actual code to load your model.
-    model = load_pretrained_model()
+    model = FaceNet()
 
     # Extract features from the face using the model
-    features = model.predict(np.expand_dims(processed_face, axis=0))
+    features = model.predict(np.expand_dims(boxes, axis=0))
 
     # Ensure the features have the desired dimensionality (e.g., 128-dimensional vectors)
     # Modify this part based on the output dimension of your model.
@@ -65,53 +66,3 @@ def cluster_faces(features):
     return labels
 
 
-# Step 6: Cluster Labeling (You may use additional information or heuristics)
-# Step 9: Face Recognition (Within each cluster)
-def recognize_faces(features, labels):
-    unique_labels = np.unique(labels)
-    for label in unique_labels:
-        if label == -1:  # Noise points (not assigned to any cluster)
-            continue
-        cluster_indices = np.where(labels == label)[0]
-        cluster_features = features[cluster_indices]
-
-        # Implement face recognition within the cluster using your chosen method
-        # For simplicity, we're not performing actual recognition here.
-
-
-# Step 1: Data Collection (Image paths)
-image_paths = ["image1.jpg", "image2.jpg", "image3.jpg"]
-
-# Process each image in the dataset
-for image_path in image_paths:
-    # Step 2: Face Detection
-    faces = detect_faces(image_path)
-
-    # Initialize a list to store extracted features for each face
-    features = []
-
-    # Step 3 4: Feature Extraction
-    for face in faces:
-        face_img = cv2.imread(image_path)[face[1]:face[3], face[0]:face[2]]
-        face_feature = extract_features(face_img, face)
-        features.append(face_feature)
-        # Detect facial landmarks using dlib
-        predictor = dlib.shape_predictor(predictor_path)
-        face_landmarks = predictor(face_img, face)
-
-        # Step 3: Face Alignment
-        aligned_face = align_face(face_img, face_landmarks)
-
-        # Continue with feature extraction (Step 4) and the rest of the pipeline
-        extracted_features = extract_features(aligned_face, face)
-
-    # Convert the list of features to a numpy array
-    features = np.array(features)
-
-    # Step 5: Clustering Algorithm
-    labels = cluster_faces(features)
-
-    # Step 9: Face Recognition (Within each cluster)
-    recognize_faces(features, labels)
-
-# Step 10: Application (Use clustered and labeled faces for specific tasks)
